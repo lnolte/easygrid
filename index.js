@@ -59,6 +59,51 @@
     }
   }
 
+  // Convenience Functions to get Colspans, Rowspans and Modulespans
+  EasyGrid.prototype.colSpan = function(from, to) {
+    var startCol = this.getModule(from, 1),
+        delta = to - from,
+        x = startCol.x,
+        y = startCol.y,
+        w = this.state.moduleWidth + (delta * (this.state.moduleWidth + this.state.gutter)),
+        h = this.state.height;
+
+    return {
+      x: x,
+      y: y,
+      width: w,
+      height: h,
+    };
+  }
+
+  EasyGrid.prototype.rowSpan = function(from, to) {
+    var startRow = this.getModule(1, from),
+        delta = to - from,
+        x = startRow.x,
+        y = startRow.y,
+        w = this.state.width,
+        h = this.state.moduleHeight + (delta * (this.state.moduleHeight + this.state.gutter));
+
+    return {
+      x: x,
+      y: y,
+      width: w,
+      height: h,
+    };
+  }
+
+  EasyGrid.prototype.moduleSpan = function(fromCol, fromRow, toCol, toRow) {
+    var col = this.colSpan(fromCol, toCol);
+    var row = this.rowSpan(fromRow, toRow);
+
+    return {
+      x: col.x,
+      y: row.y,
+      width: col.width,
+      height: row.height
+    };
+  }
+
   // Export for Node.js
   if(typeof module !== 'undefined' && module.exports) {
     module.exports = EasyGrid;

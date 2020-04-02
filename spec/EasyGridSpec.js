@@ -30,4 +30,28 @@ describe("EasyGrid", function() {
     expect(myModule.height).toEqual(245);
   });
 
+  it("should give back a correct colspan", function() {
+    var col = grid.colSpan(2, 5);
+    expect(col.x).toEqual(61);
+    expect(col.y).toEqual(10);
+    expect(col.width).toEqual(194);
+    expect(col.height).toEqual(500);
+  });
+
+  it("should give back a correct rowspan", function() {
+    var row = grid.rowSpan(1, 2);
+    expect(row.x).toEqual(10);
+    expect(row.y).toEqual(10);
+    expect(row.width).toEqual(500);
+    expect(row.height).toEqual(500);
+  });
+
+  it("should give back a correct module size", function() {
+    var module = grid.moduleSpan(2, 1, 5, 2);
+    expect(module.x).toEqual(61);
+    expect(module.y).toEqual(10);
+    expect(module.width).toEqual(194);
+    expect(module.height).toEqual(500);
+  });
+
 });
