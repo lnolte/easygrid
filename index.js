@@ -1,13 +1,14 @@
+const EVEN = 'even'
+
 class EasyGrid {
   constructor(options) {
-    this.EVEN = 'even';
     this.state = {
       x:0,
       y:0,
       columns:10,
-      columnRatio: this.EVEN,
+      columnRatio: EVEN,
       rows:1,
-      rowRatio: this.EVEN,
+      rowRatio: EVEN,
       gutterWidth: 0,
       gutterHeight: 0,
       moduleWidth:50,
@@ -19,28 +20,20 @@ class EasyGrid {
   setOptions(options) {
     const req = Object.assign(this.state, options);
 
-    // calculate the grid ratios
-    if(req.columnRatio === this.EVEN) req.columnRatio = new Array(req.columns).fill(1);
-    if(req.rowRatio === this.EVEN) req.rowRatio = new Array(req.rows).fill(1);
-
-    if(!req.columnRatio !== this.EVEN && req.width === 'undefined') {
-      console.log('You need to provide a width when using a non even column ratio');
-      return;
+    if(!req.columnRatio !== EVEN && req.width === 'undefined') {
+      throw new Error('You need to provide a width when using a non even column ratio');
     }
     
-    if(!req.rowRatio !== this.EVEN && req.height === 'undefined') {
-      console.log('You need to provide a height when using a non even row ratio');
-      return;
+    if(!req.rowRatio !== EVEN && req.height === 'undefined') {
+      throw new Error('You need to provide a height when using a non even row ratio');
     }
 
-    if(req.columnRatio !== this.EVEN && req.columnRatio.length !== req.columns) {
-      console.log('Your column ratio length needs to match the number of columns for non even ratios');
-      return;
+    if(req.columnRatio !== EVEN && req.columnRatio.length !== req.columns) {
+      throw new Error('Your column ratio length needs to match the number of columns for non even ratios');
     }
 
-    if(req.rowRatio !== this.EVEN && req.rowRatio.length !== req.rows) {
-      console.log('Your row ratio length needs to match the number of row for non even ratios');
-      return;
+    if(req.rowRatio !== EVEN && req.rowRatio.length !== req.rows) {
+      throw new Error('Your row ratio length needs to match the number of row for non even ratios');
     }
 
     // if gutter is set, override gutterWidth and gutterHeight
@@ -67,13 +60,23 @@ class EasyGrid {
     this.calculateGrid()
   }
 
+  getColumnRatio() {
+    if(this.state.columnRatio === EVEN) return new Array(this.state.columns).fill(1);
+    return this.state.columnRatio;
+  }
+
+  getRowRatio() {
+    if(this.state.rowRatio === EVEN) return new Array(this.state.rows).fill(2);
+    return this.state.rowRatio;
+  }
+
   calculateGrid() {
     this.modules = [];
     // normalize the ratios
-    const totalColumnRatio = this.state.columnRatio.reduce((acc, cur) => acc + cur);
-    const totalRowRatio = this.state.rowRatio.reduce((acc, cur) => acc + cur);
-    this.normalizedColumnRatio = this.state.columnRatio.map((item) => item / totalColumnRatio);
-    this.normalizedRowRatio = this.state.rowRatio.map((item) => item / totalRowRatio);
+    const totalColumnRatio = this.getColumnRatio().reduce((acc, cur) => acc + cur);
+    const totalRowRatio = this.getRowRatio().reduce((acc, cur) => acc + cur);
+    this.normalizedColumnRatio = this.getColumnRatio().map((item) => item / totalColumnRatio);
+    this.normalizedRowRatio = this.getRowRatio().map((item) => item / totalRowRatio);
 
     let totalHeight = 0;
     for(let y = 0; y < this.state.rows; y++) {
