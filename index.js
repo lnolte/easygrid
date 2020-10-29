@@ -1,6 +1,5 @@
-(function() {
-
-  var EasyGrid = function(options) {
+class EasyGrid {
+  constructor(options) {
     this.EVEN = 'even';
     this.state = {
       x:0,
@@ -17,8 +16,8 @@
     this.setOptions(options)
   }
 
-  EasyGrid.prototype.setOptions = function(options) {
-    var req = Object.assign(this.state, options);
+  setOptions(options) {
+    const req = Object.assign(this.state, options);
 
     // calculate the grid ratios
     if(req.columnRatio === this.EVEN) req.columnRatio = new Array(req.columns).fill(1);
@@ -28,7 +27,7 @@
       console.log('You need to provide a width when using a non even column ratio');
       return;
     }
-
+    
     if(!req.rowRatio !== this.EVEN && req.height === 'undefined') {
       console.log('You need to provide a height when using a non even row ratio');
       return;
@@ -49,7 +48,7 @@
       req.gutterWidth = req.gutter;
       req.gutterHeight = req.gutter;
     }
-
+    
     // if width is set, override moduleWidth
     if(typeof req.width !== 'undefined') {
       req.moduleWidth = (req.width - ((req.columns-1) * req.gutterWidth)) / req.columns;
@@ -68,23 +67,20 @@
     this.calculateGrid()
   }
 
-  EasyGrid.prototype.calculateGrid = function() {
+  calculateGrid() {
     this.modules = [];
     // normalize the ratios
-    var totalColumnRatio = this.state.columnRatio.reduce((acc, cur) => acc + cur);
-    var totalRowRatio = this.state.rowRatio.reduce((acc, cur) => acc + cur);
+    const totalColumnRatio = this.state.columnRatio.reduce((acc, cur) => acc + cur);
+    const totalRowRatio = this.state.rowRatio.reduce((acc, cur) => acc + cur);
     this.normalizedColumnRatio = this.state.columnRatio.map((item) => item / totalColumnRatio);
     this.normalizedRowRatio = this.state.rowRatio.map((item) => item / totalRowRatio);
 
-    var totalHeight = 0;
-
-    for(var y = 0; y < this.state.rows; y++) {
-      var height = (this.state.height - ((this.state.rows-1) * this.state.gutterHeight)) * this.normalizedRowRatio[y];
-      var totalWidth = 0;
-      for(var x = 0; x < this.state.columns; x++) {
-        var width = (this.state.width - ((this.state.columns-1) * this.state.gutterWidth)) * this.normalizedColumnRatio[x];
-        
-
+    let totalHeight = 0;
+    for(let y = 0; y < this.state.rows; y++) {
+      const height = (this.state.height - ((this.state.rows-1) * this.state.gutterHeight)) * this.normalizedRowRatio[y];
+      let totalWidth = 0;
+      for(let x = 0; x < this.state.columns; x++) {
+        const width = (this.state.width - ((this.state.columns-1) * this.state.gutterWidth)) * this.normalizedColumnRatio[x];
         this.modules.push({
           x: this.state.x + totalWidth + (x * this.state.gutterWidth),
           y: this.state.y + totalHeight + (y * this.state.gutterHeight),
@@ -98,8 +94,8 @@
     }
   }
 
-  EasyGrid.prototype.getModule = function(column, row){
-    var index = (column-1) + ((row-1) * this.state.columns)
+  getModule(column, row) {
+    const index = (column-1) + ((row-1) * this.state.columns)
     if(this.modules[index]) {
       return this.modules[index]
     }
@@ -108,15 +104,13 @@
     }
   }
 
-  // Convenience Functions to get Colspans, Rowspans and Modulespans
-  EasyGrid.prototype.colSpan = function(from, to) {
-    var startCol = this.getModule(from, 1),
-        endCol = this.getModule(to, 1),
-        delta = to - from,
-        x = startCol.x,
-        y = startCol.y,
-        w = endCol.x + endCol.width - startCol.x,
-        h = this.state.height;
+  colSpan(from, to) {
+    const startCol = this.getModule(from, 1),
+          endCol = this.getModule(to, 1),
+          x = startCol.x,
+          y = startCol.y,
+          w = endCol.x + endCol.width - startCol.x,
+          h = this.state.height;
 
     return {
       x: x,
@@ -126,14 +120,13 @@
     };
   }
 
-  EasyGrid.prototype.rowSpan = function(from, to) {
-    var startRow = this.getModule(1, from),
-        endRow = this.getModule(1, to),
-        delta = to - from,
-        x = startRow.x,
-        y = startRow.y,
-        w = this.state.width,
-        h = endRow.y + endRow.height - startRow.y;
+  rowSpan(from, to) {
+    const startRow = this.getModule(1, from),
+          endRow = this.getModule(1, to),
+          x = startRow.x,
+          y = startRow.y,
+          w = this.state.width,
+          h = endRow.y + endRow.height - startRow.y;
 
     return {
       x: x,
@@ -143,9 +136,9 @@
     };
   }
 
-  EasyGrid.prototype.moduleSpan = function(fromCol, fromRow, toCol, toRow) {
-    var col = this.colSpan(fromCol, toCol);
-    var row = this.rowSpan(fromRow, toRow);
+  moduleSpan(fromCol, fromRow, toCol, toRow) {
+    const col = this.colSpan(fromCol, toCol);
+    const row = this.rowSpan(fromRow, toRow);
 
     return {
       x: col.x,
@@ -154,14 +147,6 @@
       height: row.height
     };
   }
+}
 
-  // Export for Node.js
-  if(typeof module !== 'undefined' && module.exports) {
-    module.exports = EasyGrid;
-  }
-  // Export for browser
-  else {
-    this.EasyGrid = EasyGrid;
-  }
-
-}.call(this));
+export default EasyGrid;

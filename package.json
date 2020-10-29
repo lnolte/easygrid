@@ -2,6 +2,7 @@
   "name": "easygrid",
   "version": "1.0.0",
   "description": "A JavaScript library for easily calculating grid system positions in memory",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git://github.com/runemadsen/easygrid"
