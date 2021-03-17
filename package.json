@@ -2,18 +2,20 @@
   "name": "easygrid",
   "version": "1.0.0",
   "description": "A JavaScript library for easily calculating grid system positions in memory",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git://github.com/runemadsen/easygrid"
   },
-  "scripts" : {
-    "test" : "./node_modules/.bin/jasmine"
+  "scripts": {
+    "test": "jest spec/"
   },
   "main": "index.js",
   "author": "runemadsen",
   "license": "MIT",
-  "dependencies": {},
   "devDependencies": {
-    "jasmine": "^2.6.0"
+    "@babel/plugin-transform-modules-commonjs": "^7.12.1",
+    "babel": "^6.23.0",
+    "jest": "^26.6.1"
   }
 }
